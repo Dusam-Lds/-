@@ -23,8 +23,8 @@
 export default {
   name: "Login",
   data() {
-      // 校验函数, rule可以拿到被校验字段的信息与校验规则, value可以拿到字段的值
-      // 如果校验通过必须调用callback, 不通过不要调用
+    // 校验函数, rule可以拿到被校验字段的信息与校验规则, value可以拿到字段的值
+    // 如果校验通过必须调用callback, 不通过不要调用
     // var validatePass2 = (rule, value, callback) => {
     //   if (value === "") {
     //     callback(new Error("请再次输入密码"));
@@ -35,40 +35,48 @@ export default {
     //   }
     // };
     return {
-         // 这里的字段要按照接口文档进行修改
+      // 这里的字段要按照接口文档进行修改
       ruleForm2: {
         upwd: "123456",
-        uname: "admin",
+        uname: "admin"
       },
       rules2: {
-          // 这里添加的校验规则, 每个字段可以加多个, 所以是个数组
-        uname: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-        upwd: [{ required: true, message: '请输入你的密码', trigger: 'blur' }],
+        // 这里添加的校验规则, 每个字段可以加多个, 所以是个数组
+        uname: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        upwd: [{ required: true, message: "请输入你的密码", trigger: "blur" }]
       }
     };
   },
   methods: {
     login() {
-        // post请求的第二个参数是发送的数据, 这里直接把data里的表单对象传过去
-        this.$http.post(this.$api.login,this.ruleForm2).then((res)=>{            
-            if(res.data.status==0) {
-                this.$alert('登陆成功');
-            }else {
-                this.$alert('res.data.message');
+      // post请求的第二个参数是发送的数据, 这里直接把data里的表单对象传过去
+      this.$http.post(this.$api.login, this.ruleForm2).then(res => {
+        if (res.data.status == 0) {
+          this.$alert("登陆成功", "", {
+            // confirmButtonText: "确定",
+            callback: () => {
+            // 使用了路由插件之后, 组件实例就拥有了该对象, 对象有一个push方法, 可以进行路由跳转
+            //   this.$router.push('/admin')// push路径也可以
+            this.$router.push({name:'Admin'})
             }
-        })
+          });
+        } else {
+          this.$alert("res.data.message");
+        }
+      });
     },
-    // 登陆按钮方法     
+    // 登陆按钮方法
     // this.$refs用来获取页面中的元素或组件, 这里通过它拿到form表单组件, 调用validate方法, 给所有表单进行校验
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.login();
         } else {
-          this.$alert('你的输入不正确');
+          this.$alert("你的输入不正确");
         }
       });
     },
+    //重置按钮
     resetForm(formName) {
       this.$refs[formName].resetFields();
     }
@@ -77,19 +85,19 @@ export default {
 </script>
 
 <style scoped lang="less">
-    .login {
-      height: 100%;
-      background: skyblue;
-      section {
-        width: 400px;
-        height: 300px;
-        border: 1px solid #fff;
-        border-radius: 5px;
-        margin: 0 auto;
-        padding: 10px 20px;
-        position:relative;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-    }
+.login {
+  height: 100%;
+  background: skyblue;
+  section {
+    width: 400px;
+    height: 300px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
 </style>
