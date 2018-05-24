@@ -8,6 +8,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 import 'normalize.css'    //作用是让所有浏览器的初始样式保持一致
+import './less/index.less'
 
 import axios from 'axios'   // 不是vue插件, 导入之后只能在当前模块使用
 import api, { domain } from "./js/api.js";   //api是export default(默认导出)起的名字 , {domain}是导入已有的变量名
