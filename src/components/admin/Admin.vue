@@ -2,10 +2,12 @@
     <div class="admin">
         <el-container>
             <!-- 公共头部 -->
-            <el-header>Header</el-header>
+            <el-header>
+                <app-header></app-header>
+            </el-header>
             <el-container>
                 <!-- 公共左侧 -->
-                <el-aside width="200px">Aside</el-aside>
+                <app-aside class="app-aside">Aside</app-aside>
                 <el-main>
                     <!-- 变化的后台管理子页面 -->
                     <router-view></router-view>
@@ -37,9 +39,11 @@ export default {
         .el-container {
             height: 100%;
             background: red;
+            .app-aside {
+                background: skyblue;
+                width: 150px;
+            }
         }
-        .el-aside {
-            background: skyblue;
-        }
+        
     }
 </style>

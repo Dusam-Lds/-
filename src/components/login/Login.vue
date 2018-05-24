@@ -55,6 +55,8 @@ export default {
           this.$alert("登陆成功", "", {
             // confirmButtonText: "确定",
             callback: () => {
+              //跳转前存储用户名
+              localStorage.setItem('uname',res.data.message.uname);
             // 使用了路由插件之后, 组件实例就拥有了该对象, 对象有一个push方法, 可以进行路由跳转
             //   this.$router.push('/admin')// push路径也可以
             this.$router.push({name:'Admin'})
