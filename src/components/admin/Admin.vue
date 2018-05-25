@@ -40,8 +40,7 @@ export default {
             height: 100%;
             background: red;
             .app-aside {
-                background: skyblue;
-                width: 150px;
+                width: 201px;
             }
         }
         
