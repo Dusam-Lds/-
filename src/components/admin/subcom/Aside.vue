@@ -25,15 +25,15 @@ export default {
                {
                    title:'商品管理',
                    children: [
-                       {title:'内家管理',path:'/admin/goods'},
-                       {title:'分类管理',path:'/admin/categort'},
-                       {title:'评论管理',path:'/admin/comment'},
+                       {title:'内容管理',path:'/admin/goods/list'},
+                       {title:'分类管理',path:'/admin/goods/detail/:id'},
+                       {title:'评论管理',path:'/admin/goods/comment'},
                    ]
                 },
                 {
                    title:'学生管理',
                    children: [
-                       {title:'内家管理1',path:'/admin/goods'},
+                       {title:'内容管理1',path:'/admin/goods'},
                        {title:'分类管理2',path:'/admin/categort'},
                        {title:'评论管理3',path:'/admin/comment'},
                    ]

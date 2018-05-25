@@ -38,7 +38,6 @@ export default {
         }
         .el-container {
             height: 100%;
-            background: red;
             .app-aside {
                 width: 201px;
             }
