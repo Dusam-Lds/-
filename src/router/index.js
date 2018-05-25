@@ -1,17 +1,29 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/login/Login'
+import Login from '@/components/login/Login'//登陆
 import Admin from '@/components/admin/Admin'
-import Shopcart from '@/components/admin/shopcart/Shopcart'
+import GoodsComment from '@/components/admin/goods/comment/Comment'//商品评论
+import GoodsDetail from '@/components/admin/goods/detail/Detail'//商品详情
+import GoodsList from '@/components/admin/goods/list/List'//商品列表
 
 Vue.use(Router)
 
 //购物车的子路由,定义的变量不能大写开头
-const shopcart = [
+const goods = [
   {
-    path: 'shopcart',  // 子路由path不加/自动拼接父路由path
-    name: 'Shopcart',
-    component: Shopcart
+    path: 'goods/comment',  // 子路由path不加/自动拼接父路由path
+    name: 'GoodsComment',
+    component: GoodsComment
+  },
+  {
+    path: 'goods/detail/:id',  
+    name: 'GoodsDetail',
+    component: GoodsDetail
+  },
+  {
+    path: 'goods/list',  
+    name: 'GoodsList',
+    component: GoodsList
   },
 ]
 export default new Router({
@@ -20,7 +32,7 @@ export default new Router({
     {
       path: '/admin',
       name: 'Admin',
-      component: Admin, children: [...shopcart]
+      component: Admin, children: [...goods]
     },
     // 登陆
     {

@@ -7,7 +7,7 @@
                     <i class="el-icon-location"></i>
                     <span>{{item.title}}</span>
                 </template>
-                <el-menu-item v-for="subItem in item.children" :key="subItem.title" index="1-1">
+                <el-menu-item v-for="subItem in item.children" :key="subItem.title" :index="subItem.title">
                     <router-link :to="subItem.path">{{subItem.title}}</router-link>                            
                 </el-menu-item>
             </el-submenu>
