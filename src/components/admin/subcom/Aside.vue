@@ -48,5 +48,9 @@ export default {
 <style scoped>
     .el-menu {
         height: 100%;
+        
+    }
+    a {
+        color: #fff;
     }
 </style>
