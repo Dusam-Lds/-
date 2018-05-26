@@ -11,7 +11,7 @@
             <el-button size="small" icon="el-icon-plus">新增</el-button>
             <el-button size="small" icon="el-icon-check">全选</el-button>
             <el-button size="small" icon="el-icon-delete">删除</el-button>
-            <el-input placeholder="请输入内容" prefix-icon="el-icon-search"></el-input>
+            <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="apiQuery.searchvalue" @blur="search"></el-input>
         </div>
         <!-- 表格 -->
         <!-- data属性用来配置表格数据  -->
@@ -26,6 +26,7 @@
                     <router-link :to="{name:'GoodsDetail'}">{{ scope.row.title }}</router-link>
                 </template>
             </el-table-column>
+            <!-- 当前列要展示对象中的那个字段的值, 就配置prop属性为那个字段名 -->
             <el-table-column prop="categoryname" label="所属类别" width="120">
             </el-table-column>
             <el-table-column prop="stock_quantity" label="库存" width="120" show-overflow-tooltip>
@@ -54,6 +55,11 @@
 export default {
     data() {
       return {
+        apiQuery: {
+            searchvalue: '',
+            pageIndex: 1,
+            pageSize: 10
+        },
         tableData3: [{
           date: '2016-05-03',
           name: '王小虎',
@@ -88,17 +94,22 @@ export default {
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+    //   搜索
+      search() {
+          this.getDataList();
+      },
       //获取分类列表
       getDataList() {
-           this.$http.get(this.$api.gsList+'?pageIndex=1&pageSize=10').then((res)=>{
-                console.log(res);
+          // 这个接口需要pageIndex指定页, pageSize指定每页数量, searchvalue用于商品搜索
+          let api = `${this.$api.gsList}?pageIndex=${this.apiQuery.pageIndex}&pageSize=${this.apiQuery.pageSize}&searchvalue=${this.apiQuery.searchvalue}`
+           this.$http.get(api).then((res)=>{
                 if(res.data.status==0) {
-                    this.tableData3=res.data.message;
+                    this.tableData3=res.data.message;// 把请求回来的数据覆盖原data数量, 表格就会自动刷新
                 }
            })
       },
     },
-    //页面加载后执行
+    // 页面一上来就自动调用接口获取表格数据进行展示
     created() {
         this.getDataList();
         
