@@ -10,14 +10,14 @@
         <div class="list_btns">
             <el-button size="small" icon="el-icon-plus">新增</el-button>
             <el-button size="small" icon="el-icon-check">全选</el-button>
-            <el-button size="small" icon="el-icon-delete">删除</el-button>
+            <el-button size="small" icon="el-icon-delete" @click="delData">删除</el-button>
             <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="apiQuery.searchvalue" @blur="search"></el-input>
         </div>
         <!-- 表格 -->
         <!-- data属性用来配置表格数据  -->
-        <el-table ref="multipleTable" :data="tableData3" style="width: 100%" >
+        <el-table @selection-change="change" ref="multipleTable" :data="tableData3" style="width: 100%" >
             <!-- type为selection, 即多选框 -->
-            <el-table-column type="selection" width="55">
+            <el-table-column type="selection" width="55" >
             </el-table-column>
             <!-- 里面的template用来自定义表格中的内容与数据, 相比较prop属性的方式, 更加灵活, 可以对数据进行标签包裹 （两种不同的写法）-->
             <el-table-column label="标题">
@@ -40,7 +40,7 @@
             </el-table-column>
             <el-table-column label="操作" width="120">
                 <template slot-scope="scope">
-                    <router-link to="">删除  增加</router-link>
+                    <router-link to="">编辑</router-link>
                 </template>
             </el-table-column>
         </el-table>
@@ -60,6 +60,7 @@ export default {
             pageIndex: 1,
             pageSize: 10
         },
+        delSelectionData: [],//删除第选中数据
         tableData3: [{
           date: '2016-05-03',
           name: '王小虎',
@@ -97,6 +98,20 @@ export default {
     //   搜索
       search() {
           this.getDataList();
+      },
+      //删除数据
+      delData() {
+          //先获取数据，然后删除，再重新获取数据渲染
+          let selectionID = this.delSelectionData.map(v=>v.id)//返回这个数组中的id
+          this.$http.get(this.$api.gsDel+selectionID).then((res)=>{
+              if(res.data.status==0) {
+                  this.getDataList();
+              }
+          })
+      },
+      //当选择项发生变化时会触发该事件，并返回反选中的数据
+      change(selection) {
+          this.delSelectionData = selection;
       },
       //获取分类列表
       getDataList() {
