@@ -9,7 +9,7 @@
         <!-- 按钮&搜索框 -->
         <div class="list_btns">
             <el-button size="small" icon="el-icon-plus">新增</el-button>
-            <el-button size="small" icon="el-icon-check">全选</el-button>
+            <el-button size="small" icon="el-icon-check" @click="all">全选</el-button>
             <el-button size="small" icon="el-icon-delete" @click="delData">删除</el-button>
             <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="apiQuery.searchvalue" @blur="search"></el-input>
         </div>
@@ -22,8 +22,11 @@
             <!-- 里面的template用来自定义表格中的内容与数据, 相比较prop属性的方式, 更加灵活, 可以对数据进行标签包裹 （两种不同的写法）-->
             <el-table-column label="标题">
                 <template slot-scope="scope">
-                    <!-- slot-scope是不可或缺的  scope.row.渲染也是固定不变的 -->
-                    <router-link :to="{name:'GoodsDetail'}">{{ scope.row.title }}</router-link>
+                    <el-tooltip class="item" effect="dark" placement="right">
+                        <!-- slot-scope是不可或缺的  scope.row.渲染也是固定不变的  scope就是上面的tableData3-->
+                        <router-link :to="{path:`goods/detail/${scope.row.id}`}">{{ scope.row.title }}</router-link>
+                        <div slot="content"><img :src="scope.row.imgurl" alt="商品图片" style="width:200px"></div>
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <!-- 当前列要展示对象中的那个字段的值, 就配置prop属性为那个字段名 -->
@@ -36,11 +39,18 @@
             <el-table-column prop="sell_price" label="销售价" width="120" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="address" label="属性" width="120" show-overflow-tooltip>
-                <template slot-scope="scope">属性图标</template>
+                <template slot-scope="scope">
+                    <!-- 轮播图: is_slide -->
+                    <span :class="['el-icon-picture',scope.row.is_slide==1?'active':'']"></span>
+                    <!-- 指定: is_top -->
+                    <span :class="['el-icon-upload2',scope.row.is_top==1?'active':'']"></span>
+                    <!-- 推荐: is_hot -->
+                    <span :class="['el-icon-star-off',scope.row.is_hot==1?'active':'']"></span>
+                </template>
             </el-table-column>
             <el-table-column label="操作" width="120">
                 <template slot-scope="scope">
-                    <router-link to="">编辑</router-link>
+                    <router-link :to="{path:`goods/detail/${scope.row.id}`}">编辑</router-link>
                 </template>
             </el-table-column>
         </el-table>
@@ -113,11 +123,16 @@ export default {
       change(selection) {
           this.delSelectionData = selection;
       },
+      //全选按钮，调用按钮的点击事件
+      all() {
+          document.querySelector('.el-checkbox__inner').click();
+      },
       //获取分类列表
       getDataList() {
           // 这个接口需要pageIndex指定页, pageSize指定每页数量, searchvalue用于商品搜索
           let api = `${this.$api.gsList}?pageIndex=${this.apiQuery.pageIndex}&pageSize=${this.apiQuery.pageSize}&searchvalue=${this.apiQuery.searchvalue}`
            this.$http.get(api).then((res)=>{
+               console.log(res.data.message)
                 if(res.data.status==0) {
                     this.tableData3=res.data.message;// 把请求回来的数据覆盖原data数量, 表格就会自动刷新
                 }
@@ -143,6 +158,10 @@ export default {
   }
   a {
       color: #666;
+  }
+  [class^=el-icon].active {
+      color: #000;
+      font-weight: bold;
   }
 }
 </style>
