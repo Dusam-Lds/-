@@ -54,10 +54,14 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div style="margin-top: 20px">
-            <el-button @click="toggleSelection([tableData3[1], tableData3[2]])">切换第二、第三行的选中状态</el-button>
-            <el-button @click="toggleSelection()">取消选择</el-button>
-        </div>
+        <!-- 分页组件 -->
+        <!-- total用来设定数据总数, current-page用来设定当前页, page-size用来设定当前每页数量  -->
+        <el-pagination :total="apiQuery.totalcount" :page-size="apiQuery.pageSize" :current-page="apiQuery.pageIndex"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :page-sizes="[2, 4, 6, 8]"
+      layout="total, sizes, prev, pager, next, jumper">
+    </el-pagination>
     </div>
 </template>
 
@@ -68,43 +72,19 @@ export default {
         apiQuery: {
             searchvalue: '',
             pageIndex: 1,
-            pageSize: 10
+            pageSize: 10,
+            totalcount: 0
         },
         delSelectionData: [],//删除第选中数据
         tableData3: [{
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
         }],
-        multipleSelection: []
       }
     },
 
     methods: {
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
     //   搜索
       search() {
           this.getDataList();
@@ -135,9 +115,22 @@ export default {
                console.log(res.data.message)
                 if(res.data.status==0) {
                     this.tableData3=res.data.message;// 把请求回来的数据覆盖原data数量, 表格就会自动刷新
+                    this.apiQuery.totalcount = res.data.totalcount;// 把后端接口返回的数量总量赋值给分页组件总数量
                 }
            })
       },
+    //  每页条数发生改时 
+      handleSizeChange(size) {
+        //   console.log(size)
+        this.apiQuery.pageSize = size;// 接收到新的页面, 赋值给data里的数量, 分页组件就会刷新视图(组件内自带的参数)
+        this.getDataList();// 除了分页组件视图要变更, 表格也要重新获取数据渲染
+      },
+    // 当前页发生改变时  
+      handleCurrentChange(currentPage) {
+        //   console.log(currentPage)
+        this.apiQuery.pageIndex = currentPage;// 接收到新的每页数量, 赋值给data里的数量, 分页组件就会刷新视图(组件内自带的参数)
+        this.getDataList();// 除了分页组件视图要变更, 表格也要重新获取数据渲染
+      }
     },
     // 页面一上来就自动调用接口获取表格数据进行展示
     created() {
