@@ -29,28 +29,28 @@
                 <el-switch v-model="form.is_hot" active-text="推荐"></el-switch>
             </el-form-item>
             <el-form-item label="上传封面">
-                <el-input v-model="form.desc"></el-input>
+                <el-input v-model="form.a">form.imgList</el-input>
             </el-form-item>
             <el-form-item label="上传附件">
-                <el-input  v-model="form.desc"></el-input>
+                <el-input v-model="form.b">form.fileList</el-input>
             </el-form-item>
             <el-form-item label="商品货号">
-                <el-input  v-model="form.desc"></el-input>
+                <el-input v-model="form.goods_no"></el-input>
             </el-form-item>
             <el-form-item label="库存数量">
-                <el-input  v-model="form.stock_quantity"></el-input>
+                <el-input v-model="form.stock_quantity"></el-input>
             </el-form-item>
             <el-form-item label="市场价格">
-                <el-input  v-model="form.market_price"></el-input>
+                <el-input v-model="form.market_price"></el-input>
             </el-form-item>
             <el-form-item label="销售价格">
-                <el-input  v-model="form.sell_price"></el-input>
+                <el-input v-model="form.sell_price"></el-input>
             </el-form-item>
             <el-form-item label="内容摘要">
                 <el-input type="textarea" v-model="form.zhaiyao"></el-input>
             </el-form-item>
             <el-form-item label="详细内容">
-                 <div v-html="form.content"></div>
+                <div v-html="form.content"></div>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -75,25 +75,25 @@ export default {
     },
     // 获取商品数据
     getListDetail() {
-        this.$http.get(this.$api.gsDetail + this.id).then((res)=>{
-            if(res.data.message==0) {
-                this.form = res.data.message;
-            }
-        })
+      this.$http.get(this.$api.gsDetail + this.id).then(res => {
+        if (res.data.status == 0) {
+          this.form = res.data.message;
+        }
+      });
     }
   },
   // 组件初始化完毕后就调用接口渲染表单默认数据
   created() {
-      this.getListDetail();
+    this.getListDetail();
   }
 };
 </script>
 
 <style scoped lang="less">
-    .detail {
-        &_form {
-            margin-top: 50px;
-            width: 500px;
-        }
-    }
+.detail {
+  &_form {
+    margin-top: 50px;
+    width: 700px;
+  }
+}
 </style>
