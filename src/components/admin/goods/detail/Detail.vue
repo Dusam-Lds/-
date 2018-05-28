@@ -16,8 +16,12 @@
             </el-form-item>
             <el-form-item label="所属类别">
                 <el-select v-model="form.category_id" placeholder="请选择">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
+                    <el-option :label="item.title" :value="item.category_id" v-for="item in category" :key="item.category_id">
+                        <!-- option里面可以加标签覆盖label文本, 但是label属性还得必须要, 不然会报错 -->
+                        <span v-if="item.class_layer==1">|--</span>
+                        <span>{{item.title}}</span>
+                    </el-option>
+                    <!-- <el-option label="区域二" value="beijing"></el-option> -->
                 </el-select>
             </el-form-item>
             <el-form-item label="是否发布">
@@ -50,7 +54,7 @@
                 <el-input type="textarea" v-model="form.zhaiyao"></el-input>
             </el-form-item>
             <el-form-item label="详细内容">
-                <div v-html="form.content"></div>
+                <quillEditor v-model="form.content"></quillEditor>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -61,12 +65,18 @@
 </template>
 
 <script>
+// 富文本插件
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 export default {
   data() {
     return {
       form: {},
       // 页面一上来要从url里面拿到被编辑的商品ID
-      id: this.$route.params.id
+      id: this.$route.params.id,
+      category: []
     };
   },
   methods: {
@@ -76,16 +86,31 @@ export default {
     // 获取商品数据
     getListDetail() {
       this.$http.get(this.$api.gsDetail + this.id).then(res => {
+          console.log(res.data.mes)
         if (res.data.status == 0) {
           this.form = res.data.message;
+          this.form.category_id = +this.form.category_id;//后台返回的id是字符串，把它转换成数字
         }
       });
+    },
+    // 获取分类列表
+    getCategoryList() {
+        this.$http.get(this.$api.ctList + 'goods').then(res=>{
+            if(res.data.status == 0) {
+                this.category = res.data.message;
+            }
+        })
     }
   },
   // 组件初始化完毕后就调用接口渲染表单默认数据
   created() {
     this.getListDetail();
-  }
+    this.getCategoryList();
+  },
+  //注册组件
+   components: {
+        quillEditor
+    }
 };
 </script>
 
