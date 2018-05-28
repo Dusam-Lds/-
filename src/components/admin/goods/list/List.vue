@@ -24,7 +24,7 @@
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" placement="right">
                         <!-- slot-scope是不可或缺的  scope.row.渲染也是固定不变的  scope就是上面的tableData3-->
-                        <router-link :to="{path:`goods/detail/${scope.row.id}`}">{{ scope.row.title }}</router-link>
+                        <router-link :to="{path:`/admin/goods/detail/${scope.row.id}`}">{{ scope.row.title }}</router-link>
                         <div slot="content"><img :src="scope.row.imgurl" alt="商品图片" style="width:200px"></div>
                     </el-tooltip>
                 </template>
@@ -112,7 +112,6 @@ export default {
           // 这个接口需要pageIndex指定页, pageSize指定每页数量, searchvalue用于商品搜索
           let api = `${this.$api.gsList}?pageIndex=${this.apiQuery.pageIndex}&pageSize=${this.apiQuery.pageSize}&searchvalue=${this.apiQuery.searchvalue}`
            this.$http.get(api).then((res)=>{
-               console.log(res.data.message)
                 if(res.data.status==0) {
                     this.tableData3=res.data.message;// 把请求回来的数据覆盖原data数量, 表格就会自动刷新
                     this.apiQuery.totalcount = res.data.totalcount;// 把后端接口返回的数量总量赋值给分页组件总数量
