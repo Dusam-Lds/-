@@ -21,7 +21,6 @@
                         <span v-if="item.class_layer==1">|--</span>
                         <span>{{item.title}}</span>
                     </el-option>
-                    <!-- <el-option label="区域二" value="beijing"></el-option> -->
                 </el-select>
             </el-form-item>
             <el-form-item label="是否发布">
@@ -33,10 +32,17 @@
                 <el-switch v-model="form.is_hot" active-text="推荐"></el-switch>
             </el-form-item>
             <el-form-item label="上传封面">
-                <el-input v-model="form.a">form.imgList</el-input>
+                <el-upload class="upload-demo" :on-success="uploadImg" :file-list="form.imgList" action="http://localhost:8899/admin/article/uploadimg" list-type="picture">
+                    <el-button size="small" type="primary">上传图片</el-button>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload>
             </el-form-item>
             <el-form-item label="上传附件">
-                <el-input v-model="form.b">form.fileList</el-input>
+                <!-- 我们要监听文件上传成功的事件, 事件触发时要拿到后端接口返回的数据, 把它保存到data的from里, 将来保存修改的时候使用 -->
+                <el-upload class="upload-demo" :on-success="uploadFile" :file-list="form.fileList" action="http://localhost:8899/admin/article/uploadfile">
+                    <el-button size="small" type="primary">上传附件</el-button>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload>
             </el-form-item>
             <el-form-item label="商品货号">
                 <el-input v-model="form.goods_no"></el-input>
@@ -66,40 +72,51 @@
 
 <script>
 // 富文本插件
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-import { quillEditor } from 'vue-quill-editor'
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+import { quillEditor } from "vue-quill-editor";
 export default {
   data() {
     return {
       form: {},
       // 页面一上来要从url里面拿到被编辑的商品ID
       id: this.$route.params.id,
-      category: []
+      category: [],
     };
   },
   methods: {
     onSubmit() {
-      console.log("submit!");
-    },
+      this.$http.post(this.$api.gsEdit + this.id , this.form).then(res=>{
+          if(res.data.status==0) {
+              this.$alert('上传成功');
+          }
+      })
+    },  
     // 获取商品数据
     getListDetail() {
       this.$http.get(this.$api.gsDetail + this.id).then(res => {
-          console.log(res.data.mes)
         if (res.data.status == 0) {
           this.form = res.data.message;
-          this.form.category_id = +this.form.category_id;//后台返回的id是字符串，把它转换成数字
+          this.form.category_id = +this.form.category_id; //后台返回的id是字符串，把它转换成数字
         }
       });
     },
     // 获取分类列表
     getCategoryList() {
-        this.$http.get(this.$api.ctList + 'goods').then(res=>{
-            if(res.data.status == 0) {
-                this.category = res.data.message;
-            }
-        })
+      this.$http.get(this.$api.ctList + "goods").then(res => {
+        if (res.data.status == 0) {
+          this.category = res.data.message;
+        }
+      });
+    },
+    // 上传文件
+    uploadFile(a) {
+        this.form.fileList.push(a);// 把接口返回的数据保存起来, 供将来保存使用
+    },
+    //上传图片,只能上传一张
+    uploadImg(b) {
+        this.form.imgList = [b];// 把接口返回的数据保存起来, 供将来保存使用
     }
   },
   // 组件初始化完毕后就调用接口渲染表单默认数据
@@ -108,9 +125,9 @@ export default {
     this.getCategoryList();
   },
   //注册组件
-   components: {
-        quillEditor
-    }
+  components: {
+    quillEditor
+  }
 };
 </script>
 
