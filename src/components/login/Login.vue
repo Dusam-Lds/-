@@ -59,7 +59,8 @@ export default {
               localStorage.setItem('uname',res.data.message.uname);
             // 使用了路由插件之后, 组件实例就拥有了该对象, 对象有一个push方法, 可以进行路由跳转
             //   this.$router.push('/admin')// push路径也可以
-            this.$router.push({name:'Admin'})
+            //登陆成功后，跳转到用户未登陆时要访问的页面  ，不加 （|| '/admin'），正常访问登陆页面时，页面无法正常跳转
+            this.$router.push({path:this.$route.query.next || '/admin'})
             }
           });
         } else {

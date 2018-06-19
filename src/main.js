@@ -16,7 +16,7 @@ import api, { domain } from "./js/api.js";   //api是export default(默认导出
 // 配置默认域名, 这样请求的时候就不用在url里每次手动加域名了
 axios.defaults.baseURL = domain;
 // 因为我们调用的接口跨域了, 默认情况下接口给我们设置cookie无效, 为了让它有效, 我们必须添加此配置
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 // 为了使用方便, 把axios和api添加到Vue原型, 将来vue组件就可以直接使用
 Vue.prototype.$http = axios;
 Vue.prototype.$api = api;

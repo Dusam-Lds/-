@@ -108,6 +108,7 @@ export default {
     //获取分类列表
     getDataList() {
       // 这个接口需要pageIndex指定页, pageSize指定每页数量, searchvalue用于商品搜索
+      // this.$http.get(this.$api.gsList+'?pageIndex='+this.apiQuery.pageIndex+'&pageSize='+this.apiQuery.pageSize+'&searchvalue='+this.apiQuery.searchvalue).then(res=>{
       let api = `${this.$api.gsList}?pageIndex=${
         this.apiQuery.pageIndex
       }&pageSize=${this.apiQuery.pageSize}&searchvalue=${

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-menu class="el-menu-vertical-demo" background-color="#666" text-color="#fff" active-text-color="#ffd04b">
+        <el-menu class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
             <!-- 这里的index用来给当前菜单起个名字, 以区分 -->
             <el-submenu v-for="item in menu" :key="item.title" :index="item.title">
                 <template slot="title">

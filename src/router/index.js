@@ -26,7 +26,7 @@ const goods = [
     component: GoodsList
   },
 ]
-export default new Router({
+let router =  new Router({
   routes: [
     // 后台管理
     {
@@ -42,4 +42,52 @@ export default new Router({
     },
     
   ]
+})
+//通过路由守卫进行登陆校验
+// router.beforeEach((to,from,next)=>{
+//   Vue.prototype.$http.get(Vue.prototype.$api.islogin).then(res=>{
+//     let isLogin = false;
+//     if(res.data.code=='logined') {
+//       isLogin = true;
+//     }
+//     if(to.name == 'Login') {
+//       if(isLogin) {
+//         next({name:'Admin'})
+//       }else {
+//         next();
+//       }
+//     }
+//     if(to.name!='Login') {
+//       if(isLogin) {
+//         next();
+//       }else {
+//         next({name:'Login'})
+//       }
+//     }
+//   })
+// })
+
+export default router;
+// 另一种写法
+router.beforeEach((to, from, next) => {
+  Vue.prototype.$http.get(Vue.prototype.$api.islogin).then(res => {
+
+    if (to.name == 'Login') {
+      if (res.data.code == 'logined') {
+        next({ name: 'Admin' })
+      } else {
+        next();
+      }
+    }
+    if (to.name != 'Login') {
+      if (res.data.code == 'logined') {
+        next();
+      } else {
+        //query用来设置url中的查询字符串，我们这里是把用户访问的的的页面通过query记录下来
+        //将来用户登陆会自动跳到这个地址
+        next({ name: 'Login', query: { next: to.fullPath } });
+      }
+    }
+  })
+
 })
